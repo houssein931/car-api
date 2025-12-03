@@ -26,11 +26,24 @@ app.get('/', (req, res) => {
 });
 
 // Routes CRUD
-app.get('/api/cars', carsController.getAllCars);
-app.get('/api/cars/:id', carsController.getCarById);
-app.post('/api/cars', carsController.createCar);
-app.put('/api/cars/:id', carsController.updateCar);
-app.delete('/api/cars/:id', carsController.deleteCar);
+//app.get('/api/cars', carsController.getAllCars);
+//app.get('/api/cars/:id', carsController.getCarById);
+//app.post('/api/cars', carsController.createCar);
+//app.put('/api/cars/:id', carsController.updateCar);
+//app.delete('/api/cars/:id', carsController.deleteCar); 
+
+//Partie middleware
+
+const checkApiKey = require('./middleware/checkApiKey');
+
+// ... autres imports et config ...
+
+// Routes CRUD (protégées par le middleware)
+app.get('/api/cars', checkApiKey, carsController.getAllCars);
+app.get('/api/cars/:id', checkApiKey, carsController.getCarById);
+app.post('/api/cars', checkApiKey, carsController.createCar);
+app.put('/api/cars/:id', checkApiKey, carsController.updateCar);
+app.delete('/api/cars/:id', checkApiKey, carsController.deleteCar);
 
 // Gestion des routes non trouvées
 app.use((req, res) => {
@@ -45,3 +58,4 @@ app.listen(PORT, () => {
   console.log(`🚀 Serveur démarré sur le port ${PORT}`);
   console.log(`📍 http://localhost:${PORT}`);
 });
+
